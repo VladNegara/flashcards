@@ -10,19 +10,27 @@ from deck import Deck
 class CardWidget(QPushButton):
     def __init__(
             self,
-            card: Card,
+            card: Card | None,
             ) -> None:
         super().__init__()
 
+        self.set_card(card)
+
+        self.clicked.connect(self._on_button_clicked)
+
+    
+    def set_card(self, card: Card | None):
         self.card = card
         self.showing_definition = False
         self.refresh()
-
-        self.clicked.connect(self._on_button_clicked)
     
 
     def refresh(self):
-        self.setText(self.card.definition if self.showing_definition else self.card.term)
+        if self.card is not None:
+            self.setText(self.card.definition if self.showing_definition else self.card.term)
+        else:
+            self.setText('No more cards :(')
+            self.setEnabled(False)
 
 
     def _on_button_clicked(self):
