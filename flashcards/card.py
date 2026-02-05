@@ -1,3 +1,5 @@
+from typing import Sequence
+
 class Card:
     def __init__(
             self,
@@ -24,18 +26,18 @@ class Card:
         self.definition_example: str | None = definition_example
     
     @classmethod
-    def from_list(
+    def from_sequence(
             cls,
-            values: list[str | None],
+            values: Sequence[str | None],
             ):
         """
-        Create a card with values from a list.
+        Create a card with values from a sequence.
 
-        The list `values` must contain either two or four elements. A list that
-        contains two elements is of the form `[<term>, <definition>]`. A list
-        that contains four elements is of the form `[<term>, <term example>,
-        <definition>, <definition example>]`. The term and definition must not
-        be `None`.
+        The sequence `values` must contain either two or four elements. A
+        sequence that contains two elements is of the form `[<term>,
+        <definition>]`. A sequence that contains four elements is of the form
+        `[<term>, <term example>, <definition>, <definition example>]`. The term
+        and definition must not be `None`.
 
         :param values: The values on the card.
         :type values: list[str | None]
