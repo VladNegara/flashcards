@@ -82,18 +82,25 @@ class DeckWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, deck: Deck):
         super().__init__()
 
         self.setWindowTitle('Flashcards')
 
-        card = DeckWidget(Deck([Card('Hello', 'World'), Card('1', '2')]))
-        self.setCentralWidget(card)
+        deck_widget = DeckWidget(deck)
+        self.setCentralWidget(deck_widget)
 
 
-app = QApplication([])
+if __name__ == '__main__':
+    app = QApplication([])
 
-window = MainWindow()
-window.show()
+    if len(sys.argv) < 2:
+        raise Exception('No file path argument provided!')
 
-app.exec()
+    file_path: str = sys.argv[1]
+    deck = Deck.from_csv(file_path)
+
+    window = MainWindow(deck)
+    window.show()
+
+    app.exec()
