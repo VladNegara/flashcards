@@ -38,13 +38,56 @@ class CardWidget(QPushButton):
         self.refresh()
 
 
+class DeckWidget(QWidget):
+    def __init__(
+            self,
+            deck: Deck,
+            ) -> None:
+        super().__init__()
+
+        self.deck = deck
+
+        self.card_widget = CardWidget(self.deck.current_card())
+
+        self.know_button = QPushButton('Know')
+        self.know_button.clicked.connect(self._on_know_button_clicked)
+        self.dont_know_button = QPushButton('Don\'t know')
+        self.dont_know_button.clicked.connect(self._on_dont_know_button_clicked)
+
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.know_button)
+        button_layout.addWidget(self.dont_know_button)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.card_widget)
+        layout.addLayout(button_layout)
+
+        self.setLayout(layout)
+    
+    
+    def refresh(self):
+        current_card: Card | None = self.deck.current_card()
+        self.card_widget.set_card(current_card)
+    
+
+    def _on_know_button_clicked(self):
+        self.deck.change_card()
+        self.refresh()
+    
+
+    def _on_dont_know_button_clicked(self):
+        self.deck.change_card()
+        self.refresh()
+
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle('Flashcards')
 
-        card = CardWidget(Card('Hello', 'World'))
+        card = DeckWidget(Deck([Card('Hello', 'World'), Card('1', '2')]))
         self.setCentralWidget(card)
 
 
