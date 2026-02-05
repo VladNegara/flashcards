@@ -28,6 +28,7 @@ class CardWidget(QPushButton):
     def refresh(self):
         if self.card is not None:
             self.setText(self.card.definition if self.showing_definition else self.card.term)
+            self.setEnabled(True)
         else:
             self.setText('No more cards :(')
             self.setEnabled(False)
@@ -49,18 +50,22 @@ class DeckWidget(QWidget):
 
         self.card_widget = CardWidget(self.deck.current_card())
 
-        self.know_button = QPushButton('Know')
-        self.know_button.clicked.connect(self._on_know_button_clicked)
-        self.dont_know_button = QPushButton('Don\'t know')
-        self.dont_know_button.clicked.connect(self._on_dont_know_button_clicked)
+        know_button = QPushButton('Know')
+        know_button.clicked.connect(self._on_know_button_clicked)
+        dont_know_button = QPushButton('Don\'t know')
+        dont_know_button.clicked.connect(self._on_dont_know_button_clicked)
 
         button_layout = QHBoxLayout()
-        button_layout.addWidget(self.know_button)
-        button_layout.addWidget(self.dont_know_button)
+        button_layout.addWidget(know_button)
+        button_layout.addWidget(dont_know_button)
+
+        reset_button = QPushButton('Reset deck')
+        reset_button.clicked.connect(self._on_reset_button_clicked)
 
         layout = QVBoxLayout()
         layout.addWidget(self.card_widget)
         layout.addLayout(button_layout)
+        layout.addWidget(reset_button)
 
         self.setLayout(layout)
     
@@ -77,6 +82,11 @@ class DeckWidget(QWidget):
 
     def _on_dont_know_button_clicked(self):
         self.deck.change_card()
+        self.refresh()
+
+    
+    def _on_reset_button_clicked(self):
+        self.deck.reset()
         self.refresh()
 
 
