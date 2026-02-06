@@ -68,5 +68,4 @@ class Card:
                 
                 return Card(term, definition, term_example, definition_example)
             case _:
-                raise Exception(f'A list with {len(values)} was used to create\
-                                a card. Expected 2 or 4.')
+                raise Exception(f'The sequence {values} was used to create a card. Expected 2 or 4 values.')
