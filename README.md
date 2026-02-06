@@ -61,6 +61,16 @@ The user interface is made up of four buttons:
 - The "Reset deck" button resets the deck to its initial state.
 
 
+## File format
+
+The CSV file containing the cards must be one of the two supported formats:
+
+1. Two columns: `Term`, `Definition`.
+2. Four columns: `Term`, `Term example`, `Definition`, `Definition example`.
+
+Card files must not have headers.
+
+
 ## Vocabulary submodule
 
 The app includes [this set of vocabulary flashcards](https://github.com/VladNegara/vocabulary-flashcards) as a git submodule.
