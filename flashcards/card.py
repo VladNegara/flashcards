@@ -25,6 +25,7 @@ class Card:
         self.definition: str = definition
         self.term_example: str | None = term_example
         self.definition_example: str | None = definition_example
+        self.flipped: bool = False
         self.known: bool | None = None
 
 
