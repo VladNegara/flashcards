@@ -43,8 +43,34 @@ class DeckWidget(QWidget):
         button_layout.addWidget(know_button)
         button_layout.addWidget(dont_know_button)
 
-        previous_button = QPushButton('Previous card')
+
+        # Initialize navigation buttons
+        navigation_layout = QHBoxLayout()
+
+        first_button = QPushButton('First')
+        first_button.clicked.connect(self._on_first_button_clicked)
+        navigation_layout.addWidget(first_button)
+
+        previous_unknown_button = QPushButton('Previous unknown')
+        previous_unknown_button.clicked.connect(self._on_previous_unknown_button_clicked)
+        navigation_layout.addWidget(previous_unknown_button)
+
+        previous_button = QPushButton('Previous')
         previous_button.clicked.connect(self._on_previous_button_clicked)
+        navigation_layout.addWidget(previous_button)
+
+        next_button = QPushButton('Next')
+        next_button.clicked.connect(self._on_next_button_clicked)
+        navigation_layout.addWidget(next_button)
+
+        next_unknown_button = QPushButton('Next unknown')
+        next_unknown_button.clicked.connect(self._on_next_unknown_button_clicked)
+        navigation_layout.addWidget(next_unknown_button)
+
+        last_button = QPushButton('Last')
+        last_button.clicked.connect(self._on_last_button_clicked)
+        navigation_layout.addWidget(last_button)
+
 
         reset_button = QPushButton('Reset deck')
         reset_button.clicked.connect(self._on_reset_button_clicked)
@@ -53,7 +79,7 @@ class DeckWidget(QWidget):
         layout.addWidget(self.card_widget)
         layout.addWidget(self.card_counter)
         layout.addLayout(button_layout)
-        layout.addWidget(previous_button)
+        layout.addLayout(navigation_layout)
         layout.addWidget(reset_button)
 
         self.setLayout(layout)
@@ -66,15 +92,56 @@ class DeckWidget(QWidget):
         self.card_widget.set_card(self.cards[self.index])
         self.card_counter.setText(f'{self.index + 1}/{len(self.cards)}')
 
-    
-    def _next_card(self):
-        self.index += 1
+
+    def _first_card(self):
+        self.index = 0
         self._refresh()
-    
+
 
     def _previous_card(self):
         self.index -= 1
         self._refresh()
+
+
+    def _previous_unknown_card(self):
+        self.index -= 1
+        while self.index > 0:
+            card = self.cards[self.index]
+            if card is not None and not card.known:
+                break
+            self.index -= 1
+        
+        self._refresh()
+
+
+    def _next_unknown_card(self):
+        self.index += 1
+        while self.index > 0:
+            card = self.cards[self.index]
+            if card is not None and not card.known:
+                break
+            self.index += 1
+        
+        self._refresh()
+
+    
+    def _next_card(self):
+        self.index += 1
+        self._refresh()
+
+
+    def _last_card(self):
+        self.index = len(self.cards) - 1
+        self._refresh()
+
+
+    def _reset(self):
+        for card in self.cards:
+            if card is None:
+                continue
+            card.known = None
+
+        self._first_card()
     
 
     def _on_know_button_clicked(self):
@@ -87,10 +154,29 @@ class DeckWidget(QWidget):
         self._next_card()
 
 
+    def _on_first_button_clicked(self):
+        self._first_card()
+
+
+    def _on_previous_unknown_button_clicked(self):
+        self._previous_unknown_card()
+
+
     def _on_previous_button_clicked(self):
         self._previous_card()
 
+
+    def _on_next_button_clicked(self):
+        self._next_card()
+
+
+    def _on_next_unknown_button_clicked(self):
+        self._next_unknown_card()
+
+
+    def _on_last_button_clicked(self):
+        self._last_card()
+
     
     def _on_reset_button_clicked(self):
-        self.index = 0
-        self._refresh()
+        self._reset()
