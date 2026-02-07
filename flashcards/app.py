@@ -2,10 +2,9 @@ import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QStackedLayout
 
 from card import Card
-from deck import Deck
 
 class CardWidget(QPushButton):
     def __init__(
@@ -42,13 +41,18 @@ class CardWidget(QPushButton):
 class DeckWidget(QWidget):
     def __init__(
             self,
-            deck: Deck,
+            cards: list[Card],
             ) -> None:
         super().__init__()
 
-        self.deck = deck
+        self.cards: list[Card] = cards
 
-        self.card_widget = CardWidget(self.deck.current_card())
+        self.index: int = 0
+
+        self.stacked_card_layout = QStackedLayout()
+        for card in self.cards:
+            self.stacked_card_layout.addWidget(CardWidget(card))
+        self.stacked_card_layout.addWidget(CardWidget(None))
 
         know_button = QPushButton('Know')
         know_button.clicked.connect(self._on_know_button_clicked)
@@ -59,45 +63,61 @@ class DeckWidget(QWidget):
         button_layout.addWidget(know_button)
         button_layout.addWidget(dont_know_button)
 
+        previous_button = QPushButton('Previous card')
+        previous_button.clicked.connect(self._on_previous_button_clicked)
+
         reset_button = QPushButton('Reset deck')
         reset_button.clicked.connect(self._on_reset_button_clicked)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.card_widget)
+        layout.addLayout(self.stacked_card_layout)
         layout.addLayout(button_layout)
+        layout.addWidget(previous_button)
         layout.addWidget(reset_button)
 
         self.setLayout(layout)
+
     
+    def _refresh(self):
+        self.index = max(0, min(self.index, len(self.cards)))
+        self.stacked_card_layout.setCurrentIndex(self.index)
+
     
-    def refresh(self):
-        current_card: Card | None = self.deck.current_card()
-        self.card_widget.set_card(current_card)
+    def _next_card(self):
+        self.index += 1
+        self._refresh()
+    
+
+    def _previous_card(self):
+        self.index -= 1
+        self._refresh()
     
 
     def _on_know_button_clicked(self):
-        self.deck.change_card()
-        self.refresh()
+        self._next_card()
     
 
     def _on_dont_know_button_clicked(self):
-        self.deck.change_card()
-        self.refresh()
+        self._next_card()
+
+
+    def _on_previous_button_clicked(self):
+        self._previous_card()
 
     
     def _on_reset_button_clicked(self):
-        self.deck.reset()
-        self.refresh()
+        self.index = 0
+        self._refresh()
 
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, deck: Deck):
+    def __init__(self, cards: list[Card]):
         super().__init__()
 
         self.setWindowTitle('Flashcards')
 
-        deck_widget = DeckWidget(deck)
+        deck_widget = DeckWidget(cards)
         self.setCentralWidget(deck_widget)
 
 
@@ -108,9 +128,9 @@ if __name__ == '__main__':
         raise Exception('No file path argument provided!')
 
     file_path: str = sys.argv[1]
-    deck = Deck.from_csv(file_path)
+    cards = Card.from_csv(file_path)
 
-    window = MainWindow(deck)
+    window = MainWindow(cards)
     window.show()
 
     app.exec()

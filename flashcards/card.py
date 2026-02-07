@@ -1,3 +1,4 @@
+import csv
 from typing import Sequence
 
 class Card:
@@ -24,7 +25,9 @@ class Card:
         self.definition: str = definition
         self.term_example: str | None = term_example
         self.definition_example: str | None = definition_example
-    
+        self.known: bool | None = None
+
+
     @classmethod
     def from_sequence(
             cls,
@@ -69,3 +72,22 @@ class Card:
                 return Card(term, definition, term_example, definition_example)
             case _:
                 raise Exception(f'The sequence {values} was used to create a card. Expected 2 or 4 values.')
+
+
+    @classmethod
+    def from_csv(
+            cls,
+            file_path: str
+            ):
+        """
+        Create a list of cards from a CSV file.
+        
+        :param file_path: The path to the CSV file.
+        :type file_path: str
+        """
+        cards: list[Card] = []
+        with open(file_path, newline='') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                cards.append(Card.from_sequence(row))
+        return cards
