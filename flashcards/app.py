@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Flashcards')
         # 480p window
         self.setMinimumSize(QSize(854, 480))
-        self.setFont(QFont('Georgia', pointSize=24))
+        self.setContentsMargins(20, 20, 20, 20)
 
         deck_widget = DeckWidget(cards)
         self.setCentralWidget(deck_widget)
@@ -27,6 +27,13 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication([])
+    app.setStyleSheet("""
+        MainWindow { background: #586574 }
+        * { font-family: Georgia, sans-serif; font-size: 24px }
+        QPushButton { background: #d0d6dc; padding: 8px; border: 1px solid #121417; border-radius: 4px }
+        QPushButton:hover { background: #b9c1ca }
+        QPushButton:pressed { background: #8b98a7 }
+    """)
 
     if len(sys.argv) < 2:
         raise Exception('No file path argument provided!')

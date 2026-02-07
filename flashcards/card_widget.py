@@ -38,12 +38,12 @@ class CardWidget(QPushButton):
         term_with_example_layout.addWidget(self.term)
 
         term_as_in = QLabel('as in')
-        term_as_in.setFont(QFont('Georgia', pointSize=16))
+        term_as_in.setStyleSheet('font-size: 16px')
         term_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(term_as_in)
 
         self.term_example = QLabel('')
-        self.term_example.setFont(QFont('Georgia', pointSize=20, italic=True))
+        self.term_example.setStyleSheet('font: italic 20px')
         self.term_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(self.term_example)
 
@@ -65,12 +65,12 @@ class CardWidget(QPushButton):
         definition_with_example_layout.addWidget(self.definition)
 
         definition_as_in = QLabel('as in')
-        definition_as_in.setFont(QFont('Georgia', pointSize=16))
+        definition_as_in.setStyleSheet('font-size: 16px')
         definition_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(definition_as_in)
 
         self.definition_example = QLabel('')
-        self.definition_example.setFont(QFont('Georgia', pointSize=20, italic=True))
+        self.definition_example.setStyleSheet('font: italic 20px')
         self.definition_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(self.definition_example)
 
@@ -124,11 +124,27 @@ class CardWidget(QPushButton):
             self.setEnabled(True)
 
             if not self.card.flipped:
+                match self.card.known:
+                    case None:
+                        self.setStyleSheet('QPushButton { background-color: #dce0e5; border: 1px solid #121417; border-radius: 6px }')
+                    case True:
+                        self.setStyleSheet('QPushButton { background-color: #dce5e3; border: 1px solid #121417; border-radius: 6px }')
+                    case False:
+                        self.setStyleSheet('QPushButton { background-color: #e8d9de; border: 1px solid #121417; border-radius: 6px }')
+
                 if not self.card.term_example:
                     self.stacked_layout.setCurrentWidget(self.term_no_example)
                 else:
                     self.stacked_layout.setCurrentWidget(self.term_with_example)
             else:
+                match self.card.known:
+                    case None:
+                        self.setStyleSheet('QPushButton { background-color: #c5ccd3; border: 1px solid #121417; border-radius: 6px }')
+                    case True:
+                        self.setStyleSheet('QPushButton { background-color: #c4d4d0; border: 1px solid #121417; border-radius: 6px }')
+                    case False:
+                        self.setStyleSheet('QPushButton { background-color: #d9bfc9; border: 1px solid #121417; border-radius: 6px }')
+
                 if not self.card.definition_example:
                     self.stacked_layout.setCurrentWidget(self.definition_no_example)
                 else:

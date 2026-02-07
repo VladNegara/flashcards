@@ -78,10 +78,12 @@ class DeckWidget(QWidget):
     
 
     def _on_know_button_clicked(self):
+        self.card_widget.set_known(True)
         self._next_card()
     
 
     def _on_dont_know_button_clicked(self):
+        self.card_widget.set_known(False)
         self._next_card()
 
 
