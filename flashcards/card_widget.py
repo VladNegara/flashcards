@@ -109,6 +109,16 @@ class CardWidget(QPushButton):
         self._refresh()
 
 
+    def known(self) -> bool | None:
+        return self.card.known if self.card else None
+
+
+    def set_known(self, known: bool | None) -> None:
+        if self.card:
+            self.card.known = known
+        self._refresh()
+
+
     def _refresh(self):
         if self.card is not None:
             self.setEnabled(True)
