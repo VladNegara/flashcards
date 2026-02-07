@@ -1,9 +1,10 @@
 import sys
 from random import shuffle
+from typing import Sequence
 
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QAction, QFont
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QStackedLayout, QLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QBoxLayout, QHBoxLayout, QVBoxLayout, QStackedLayout, QLayout, QSizePolicy
 
 from card import Card
 
@@ -74,7 +75,7 @@ class CardWidget(QPushButton):
 
 
         # Initialize the None display and add it to the layout
-        self.none_card = QLabel('No more cards to display :(')
+        self.none_card = QLabel('No cards to display :(')
         self.none_card.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.stacked_layout.addWidget(self.none_card)
 
@@ -137,11 +138,16 @@ class DeckWidget(QWidget):
             ) -> None:
         super().__init__()
 
-        self.cards: list[Card | None] = cards + [None]
+        self.cards: Sequence[Card | None] = cards or [None]
 
         self.index: int = 0
 
         self.card_widget = CardWidget(cards[0])
+        self.card_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.MinimumExpanding)
+
+        self.card_counter = QLabel('')
+        self.card_counter.setFont(QFont('Georgia', pointSize=12))
+        self.card_counter.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         know_button = QPushButton('Know')
         know_button.clicked.connect(self._on_know_button_clicked)
@@ -159,18 +165,22 @@ class DeckWidget(QWidget):
         reset_button = QPushButton('Reset deck')
         reset_button.clicked.connect(self._on_reset_button_clicked)
 
-        layout = QVBoxLayout()
+        layout = QBoxLayout(QBoxLayout.Direction.TopToBottom)
         layout.addWidget(self.card_widget)
+        layout.addWidget(self.card_counter)
         layout.addLayout(button_layout)
         layout.addWidget(previous_button)
         layout.addWidget(reset_button)
 
         self.setLayout(layout)
 
+        self._refresh()
+
     
     def _refresh(self):
-        self.index = max(0, min(self.index, len(self.cards)))
+        self.index = max(0, min(self.index, len(self.cards) - 1))
         self.card_widget.set_card(self.cards[self.index])
+        self.card_counter.setText(f'{self.index + 1}/{len(self.cards)}')
 
     
     def _next_card(self):
