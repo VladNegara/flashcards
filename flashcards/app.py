@@ -13,29 +13,40 @@ class CardWidget(QPushButton):
             ) -> None:
         super().__init__()
 
-        self.set_card(card)
-
-        self.clicked.connect(self._on_button_clicked)
-
-    
-    def set_card(self, card: Card | None):
         self.card = card
-        self.showing_definition = False
-        self.refresh()
-    
 
-    def refresh(self):
         if self.card is not None:
-            self.setText(self.card.definition if self.showing_definition else self.card.term)
-            self.setEnabled(True)
+            front_face = QWidget()
+            front_face_layout = QVBoxLayout(front_face)
+            front_face_layout.addWidget(QLabel(self.card.term))
+            if self.card.term_example:
+                front_face_layout.addWidget(QLabel(f'as in "{self.card.term_example}"'))
+    
+            back_face = QWidget()
+            back_face_layout = QVBoxLayout(back_face)
+            back_face_layout.addWidget(QLabel(self.card.definition))
+            if self.card.definition_example:
+                back_face_layout.addWidget(QLabel(f'as in "{self.card.definition_example}"'))
+            
+            self.stacked_layout = QStackedLayout()
+            self.stacked_layout.addWidget(front_face)
+            self.stacked_layout.addWidget(back_face)
+            self.setLayout(self.stacked_layout)
+
+            self.flipped = False
+            self.clicked.connect(self._on_button_clicked)
         else:
-            self.setText('No more cards :(')
+            self.setText('No more cards')
             self.setEnabled(False)
 
 
+    def _refresh(self):
+        self.stacked_layout.setCurrentIndex(1 if self.flipped else 0)
+
+
     def _on_button_clicked(self):
-        self.showing_definition = not self.showing_definition
-        self.refresh()
+        self.flipped = not self.flipped
+        self._refresh()
 
 
 class DeckWidget(QWidget):
