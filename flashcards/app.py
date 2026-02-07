@@ -1,7 +1,7 @@
 import sys
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtGui import QAction, QFont
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QStackedLayout, QLayout
 
 from card import Card
@@ -33,10 +33,12 @@ class CardWidget(QPushButton):
         term_with_example_layout.addWidget(self.term)
 
         term_as_in = QLabel('as in')
+        term_as_in.setFont(QFont('Georgia', pointSize=16))
         term_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(term_as_in)
 
         self.term_example = QLabel('')
+        self.term_example.setFont(QFont('Georgia', pointSize=20, italic=True))
         self.term_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(self.term_example)
 
@@ -58,10 +60,12 @@ class CardWidget(QPushButton):
         definition_with_example_layout.addWidget(self.definition)
 
         definition_as_in = QLabel('as in')
+        definition_as_in.setFont(QFont('Georgia', pointSize=16))
         definition_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(definition_as_in)
 
         self.definition_example = QLabel('')
+        self.definition_example.setFont(QFont('Georgia', pointSize=20, italic=True))
         self.definition_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(self.definition_example)
 
@@ -144,6 +148,7 @@ class DeckWidget(QWidget):
         dont_know_button.clicked.connect(self._on_dont_know_button_clicked)
 
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(24)
         button_layout.addWidget(know_button)
         button_layout.addWidget(dont_know_button)
 
@@ -200,6 +205,9 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle('Flashcards')
+        # 480p window
+        self.setMinimumSize(QSize(854, 480))
+        self.setFont(QFont('Georgia', pointSize=24))
 
         deck_widget = DeckWidget(cards)
         self.setCentralWidget(deck_widget)
