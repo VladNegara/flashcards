@@ -87,7 +87,7 @@ class Card:
         :type file_path: str
         """
         cards: list[Card] = []
-        with open(file_path, newline='') as file:
+        with open(file_path, encoding='utf-8', newline='') as file:
             reader = csv.reader(file)
             for row in reader:
                 cards.append(Card.from_sequence(row))
