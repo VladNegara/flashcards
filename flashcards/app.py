@@ -1,4 +1,5 @@
 import sys
+from random import shuffle
 
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QAction, QFont
@@ -221,6 +222,7 @@ if __name__ == '__main__':
 
     file_path: str = sys.argv[1]
     cards = Card.from_csv(file_path)
+    shuffle(cards)
 
     window = MainWindow(cards)
     window.show()
