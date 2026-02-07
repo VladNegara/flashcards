@@ -13,38 +13,71 @@ class CardWidget(QPushButton):
             ) -> None:
         super().__init__()
 
+        # Initialize the stacked layout
         self.stacked_layout = QStackedLayout(self)
         self.stacked_layout.setVerticalSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
 
+
+        # Initialize the front without example and add it to the layout
         self.term_no_example = QLabel('')
+        self.term_no_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.stacked_layout.addWidget(self.term_no_example)
-        
-        self.term = QLabel('')
-        self.term_example = QLabel('')
+
+
+        # Initialize the front with example and add it to the layout
         self.term_with_example = QWidget()
         term_with_example_layout = QVBoxLayout(self.term_with_example)
+
+        self.term = QLabel('')
+        self.term.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(self.term)
-        term_with_example_layout.addWidget(QLabel('as in'))
+
+        term_as_in = QLabel('as in')
+        term_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        term_with_example_layout.addWidget(term_as_in)
+
+        self.term_example = QLabel('')
+        self.term_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         term_with_example_layout.addWidget(self.term_example)
+
         self.stacked_layout.addWidget(self.term_with_example)
 
+
+        # Initialize the back without example and add it to the layout
         self.definition_no_example = QLabel('')
+        self.definition_no_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.stacked_layout.addWidget(self.definition_no_example)
 
-        self.definition = QLabel('')
-        self.definition_example = QLabel('')
+
+        # Initialize the back with example and add it to the layout
         self.definition_with_example = QWidget()
         definition_with_example_layout = QVBoxLayout(self.definition_with_example)
+
+        self.definition = QLabel('')
+        self.definition.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(self.definition)
-        definition_with_example_layout.addWidget(QLabel('as in'))
+
+        definition_as_in = QLabel('as in')
+        definition_as_in.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        definition_with_example_layout.addWidget(definition_as_in)
+
+        self.definition_example = QLabel('')
+        self.definition_example.setAlignment(Qt.AlignmentFlag.AlignCenter)
         definition_with_example_layout.addWidget(self.definition_example)
+
         self.stacked_layout.addWidget(self.definition_with_example)
 
+
+        # Initialize the None display and add it to the layout
         self.none_card = QLabel('No more cards to display :(')
+        self.none_card.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.stacked_layout.addWidget(self.none_card)
 
+
+        # Connect button signal
         self.clicked.connect(self._on_button_clicked)
 
+        # Set the card passed as parameter
         self.set_card(card)
 
 
