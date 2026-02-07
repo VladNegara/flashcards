@@ -74,7 +74,6 @@ class CardWidget(QPushButton):
             if not self.card.flipped:
                 if not self.card.term_example:
                     self.stacked_layout.setCurrentWidget(self.term_no_example)
-                    print(self.term_no_example.text())
                 else:
                     self.stacked_layout.setCurrentWidget(self.term_with_example)
             else:
@@ -85,7 +84,6 @@ class CardWidget(QPushButton):
         else:
             self.setEnabled(False)
             self.stacked_layout.setCurrentWidget(self.none_card)
-            print('Stacked layout changing to index 4')
 
 
     def _on_button_clicked(self):
